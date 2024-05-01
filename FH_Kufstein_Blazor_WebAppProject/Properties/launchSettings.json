@@ -1,0 +1,40 @@
+//Used for development to define the launch settings for the project. These settings are used by the Visual Studio debugger to launch the application. For more information, see [ LaunchSettings.json file for ASP.NET Core ](https: //docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-5.0#launchsettingsjson-file-for-aspnet-core).
+//Especially useful for defining multiple profiles for different environments, such as Development, Staging, and Production.
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:5078",
+      "sslPort": 44363
+    }
+  },
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:5122",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:7029;http://localhost:5122",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

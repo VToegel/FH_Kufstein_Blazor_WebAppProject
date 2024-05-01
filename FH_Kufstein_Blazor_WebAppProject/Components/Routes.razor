@@ -1,0 +1,6 @@
+﻿<Router AppAssembly="typeof(Program).Assembly">
+    <Found Context="routeData"> @* collect and use routedata found *@
+        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" /> @* render "Routedata" into "DefaultLayout" *@
+        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+    </Found>
+</Router>
