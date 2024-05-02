@@ -1,0 +1,79 @@
+﻿@page "/editcontainerdata"
+@inject NavigationManager _NavigationManager
+@inject ContainerDataClient Client
+@inject ContainerTypeClient ContainerTypeClient
+
+<PageTitle>Add/Edit Container Data</PageTitle> @* change title to project name *@
+
+<h3>Add/Edit Container Data</h3> @* change header to project name *@
+
+@if (containerTypes is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="@containerDetails" FormName="editContainer" OnSubmit="OnValidSubmit">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Container Name:</label>
+                    <InputText id="name" @bind-Value="containerDetails.Name" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label for="containerType" class="form-label">Container Type:</label>
+                    <InputSelect id="containerType" @bind-Value="containerDetails.ContainerTypeId" class="form-select">
+                        <option value="">Select Container Type</option>
+
+                        @foreach (var containerType in containerTypes)
+                        {
+                            <option value="@containerType.Id">@containerType.Name</option>
+                        }
+
+                    </InputSelect>
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Container Location:</label>
+                    <InputText id="location" @bind-Value="containerDetails.Location" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label for="capacity" class="form-label">Container Capacity:</label>
+                    <InputNumber id="capacity" @bind-Value="containerDetails.Capacity" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label for="currentLevel" class="form-label">Current Container Level:</label>
+                    <InputNumber id="currentLevel" @bind-Value="containerDetails.CurrentLevel" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label for="dateTime" class="form-label">Date / Time:</label>
+                    <InputDate id="dateTime" @bind-Value="containerDetails.DateTime" class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a role="button" class="btn btn-secondary" href="/">Cancel</a>
+            </EditForm>
+        </div>
+    </div>
+}
+@code 
+{
+    [SupplyParameterFromForm]
+    private ContainerDetails containerDetails { get; set; } = new() @* create new instance of ContainerData *@
+    {
+        Name = string.Empty,
+        Location = string.Empty,
+        DateTime = DateTime.Now,
+    };
+
+    private ContainerType[]? containerTypes;
+
+    protected override void OnInitialized()
+    {
+        containerTypes = ContainerTypeClient.GetContainerTypes();
+    }
+
+    private void OnValidSubmit()
+    {
+        Client.AddContainerData(containerDetails);
+        _NavigationManager.NavigateTo("/");
+    }
+}

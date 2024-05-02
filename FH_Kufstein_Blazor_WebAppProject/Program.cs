@@ -1,9 +1,12 @@
+using FH_Kufstein_Blazor_WebAppProject.Clients;
 using FH_Kufstein_Blazor_WebAppProject.Components;
 
 var builder = WebApplication.CreateBuilder(args); // Create a new WebApplication instance & create builder to register for dependency injection
 
 // Add services to the container.
 builder.Services.AddRazorComponents(); // Add RazorComponents to the services container
+builder.Services.AddSingleton<ContainerDataClient>(); // Add the ContainerDataClient to the services container
+builder.Services.AddSingleton<ContainerTypeClient>(); // Add the ContainerTypeClient to the services container
 
 var app = builder.Build(); // Build the WebApplication
 
