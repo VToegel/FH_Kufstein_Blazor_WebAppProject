@@ -1,13 +1,15 @@
 ﻿@page "/editcontainerdata"
+@page "/editcontainerdata/{Id:int}"
 @inject NavigationManager _NavigationManager
 @inject ContainerDataClient Client
 @inject ContainerTypeClient ContainerTypeClient
+@rendermode InteractiveServer
 
-<PageTitle>Add/Edit Container Data</PageTitle> @* change title to project name *@
+<PageTitle>@title</PageTitle> @* change title to project name *@
 
-<h3>Add/Edit Container Data</h3> @* change header to project name *@
+<h3>@title</h3> @* change header to project name *@
 
-@if (containerTypes is null)
+@if (containerTypes is null || containerDetails is null)
 {
     <p><em>Loading...</em></p>
 }
@@ -17,7 +19,7 @@ else
         <div class="col-md-4">
             <EditForm Model="@containerDetails" FormName="editContainer" OnValidSubmit="OnValidSubmit">
                 <DataAnnotationsValidator />
-                <ValidationSummary/>
+                <ValidationSummary />
                 <div class="mb-3">
                     <label for="name" class="form-label">Container Name:</label>
                     <InputText id="name" @bind-Value="containerDetails.Name" class="form-control" />
@@ -60,17 +62,43 @@ else
         </div>
     </div>
 }
-@code 
+@code
 {
+    [Parameter]
+    public int? Id { get; set; }
+
+    private string title = string.Empty;
+
     [SupplyParameterFromForm]
-    private ContainerDetails containerDetails { get; set; } = new() @* create new instance of ContainerData *@
-    {
-        Name = string.Empty,
-        Location = string.Empty,
-        DateTime = DateTime.Now,
-    };
+    private ContainerDetails? containerDetails { get; set; }
 
     private ContainerType[]? containerTypes;
+
+    protected override void OnParametersSet()
+    {
+        if (containerDetails is not null)
+        {
+            return;
+        }
+
+        base.OnParametersSet();
+        if (Id.HasValue)
+        {
+            containerDetails = Client.GetContainerData(Id.Value);
+            title = $"Edit {containerDetails.Name}";
+        }
+        else
+        {
+
+            containerDetails = new() @* create new instance of ContainerData *@
+            {
+                Name = string.Empty,
+                Location = string.Empty,
+                DateTime = DateTime.Now,
+            };
+            title = "Add Container Data";
+        }
+    }
 
     protected override void OnInitialized()
     {
@@ -79,7 +107,17 @@ else
 
     private void OnValidSubmit()
     {
-        Client.AddContainerData(containerDetails);
+        ArgumentNullException.ThrowIfNull(containerDetails);
+
+        if (Id is null)
+        {
+            Client.AddContainerData(containerDetails);
+        }
+        else
+        {
+            containerDetails.Id = Id.Value; //get the value of Id
+            Client.UpdateContainerData(containerDetails);
+        }
         _NavigationManager.NavigateTo("/");
     }
 }

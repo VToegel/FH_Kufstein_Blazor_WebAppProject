@@ -19,20 +19,21 @@ else
         <thead class="table-dark">
             <tr>
                 <th class="text-center">Id</th>
-                <th class ="text-center">Name</th>
+                <th class="text-center">Name</th>
                 <th class="text-center">Date / Time</th>
                 <th class="text-center">Location</th>
                 <th class="text-center">Container Type</th>
                 <th class="text-center">Capacity</th>
                 <th class="text-center">Current Level</th>
                 <th class="text-center">Measurement Data</th>
+                <th class="text-center" />
             </tr>
-         </thead>
-         <tbody>
-         @foreach (var container in containers)
-         {
-            <tr>
-                    <td class ="text-center">@container.Id</td>
+        </thead>
+        <tbody>
+            @foreach (var container in containers)
+            {
+                <tr>
+                    <td class="text-center">@container.Id</td>
                     <td class="text-center">@container.Name</td>
                     <td class="text-center">@container.DateTime</td>
                     <td class="text-center">@container.Location</td>
@@ -40,23 +41,34 @@ else
                     <td class="text-center">@container.Capacity</td>
                     <td class="text-center">@container.CurrentLevel</td>
                     <td class="text-center">
-                    <ul>
-                        @if (container.Measurements != null)
-                        {
-                            @foreach (var measurement in container.Measurements)
+                        <ul>
+                            @if (container.Measurements != null)
                             {
-                                <li>@measurement</li>
+                                @foreach (var measurement in container.Measurements)
+                                {
+                                    <li>@measurement</li>
+                                }
                             }
-                        }
-                    </ul>
-                </td>
-            </tr>
-         }
-         </tbody>
+                        </ul>
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            <a class="btn btn-primary me-2" role="button" href="@ContainerUrl(container.Id)">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a class="btn btn-danger" role="button" data-bs-toggle="modal" data-bs-target="@GetDeleteModalId(container)">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                        <DeleteContainer Container="@container" />
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 }
 
-@code{
+@code {
 
     private ContainerData[]? containers;
 
@@ -65,4 +77,8 @@ else
         base.OnInitialized();
         containers = Client.GetContainerData();
     }
+
+    private static string ContainerUrl(int id) => $"/editcontainerdata/{id}";
+
+    private string GetDeleteModalId(ContainerData container) => $"#{DeleteContainer.GetModalId(container)}"; /* Get the modal id for the delete container modal */
 }
