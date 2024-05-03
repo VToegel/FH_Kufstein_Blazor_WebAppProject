@@ -15,10 +15,13 @@ else
 {
     <div class="row">
         <div class="col-md-4">
-            <EditForm Model="@containerDetails" FormName="editContainer" OnSubmit="OnValidSubmit">
+            <EditForm Model="@containerDetails" FormName="editContainer" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary/>
                 <div class="mb-3">
                     <label for="name" class="form-label">Container Name:</label>
                     <InputText id="name" @bind-Value="containerDetails.Name" class="form-control" />
+                    <ValidationMessage For="() => containerDetails.Name" />
                 </div>
                 <div class="mb-3">
                     <label for="containerType" class="form-label">Container Type:</label>
@@ -31,6 +34,7 @@ else
                         }
 
                     </InputSelect>
+                    <ValidationMessage For="() => containerDetails.ContainerTypeId" />
                 </div>
                 <div class="mb-3">
                     <label for="location" class="form-label">Container Location:</label>
@@ -39,10 +43,12 @@ else
                 <div class="mb-3">
                     <label for="capacity" class="form-label">Container Capacity:</label>
                     <InputNumber id="capacity" @bind-Value="containerDetails.Capacity" class="form-control" />
+                    <ValidationMessage For="() => containerDetails.Capacity" />
                 </div>
                 <div class="mb-3">
                     <label for="currentLevel" class="form-label">Current Container Level:</label>
                     <InputNumber id="currentLevel" @bind-Value="containerDetails.CurrentLevel" class="form-control" />
+                    <ValidationMessage For="() => containerDetails.CurrentLevel" />
                 </div>
                 <div class="mb-3">
                     <label for="dateTime" class="form-label">Date / Time:</label>
